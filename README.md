@@ -2,6 +2,12 @@
 WordSync is a program I have created based off of a fun project I worked on a while ago. My goal was to create a program that could type the lyrics to "*Want You Gone*" by Jonathan Coulton, just as they appeared in the game Portal 2. Branching off of that, is this program! I aimed to make it easy to use, with no programming experience required.
 ## How it works
 The program reads my new file type I created for this, the JWC file (Java WordSync). From that, it is able to type them out using the user-provided speeds and rests.
+## Demo Video:
+
+
+https://github.com/user-attachments/assets/4f4195dd-3159-4614-9426-f541efd167ef
+
+
 ## Installation and running:
 To install, download the code as a zip and extract it. Open the folder, and replace `audio.wav` with your own `.wav` file (must be named `audio.wav`. Optionally, change the code if you want it to be named something else). You can also keep it the same to test the program. Then, edit the `toPrint.jwc` as needed. Finally, open the terminal and navigate to that folder. Run the command: `java -jar WordSync.jar`, and it will run!
 # How to write JWC files:

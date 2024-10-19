@@ -3,11 +3,13 @@ import java.util.concurrent.TimeUnit;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.io.IOException;
+import javax.sound.sampled.*;
 
 public class Printer{
     
-    static int TEMPO = 0; // SONG TEMPO GOES HERE
-    static double MILLISECONDS_PER_BEAT = 60000.0 / TEMPO; 
+    static int TEMPO = 0;
+    static double MILLISECONDS_PER_BEAT = 0; 
 
     private final static ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
     private static Scanner lyrics;
@@ -15,8 +17,8 @@ public class Printer{
     static double restLength = 0.0;
 
     public static void print() throws InterruptedException, FileNotFoundException{
-        Sound sound = new Sound("audio.wav");
-        sound.play();
+        
+        play("audio.wav");
         lyrics = new Scanner(new File("toPrint.jwc"));
         try {
             String tempoCheck = lyrics.nextLine();
@@ -30,7 +32,7 @@ public class Printer{
         MILLISECONDS_PER_BEAT = 60000.0 / TEMPO;
         printLyrics = new Scanner(new File("toPrint.jwc"));
         printLyrics.nextLine();
-        System.out.println("\033[H\033[2J");
+        System.out.print("\033[H\033[2J");
         processLine(lyrics.nextLine());
         lyrics.close();
     }
@@ -98,6 +100,26 @@ public class Printer{
         if(!printLyrics.hasNextLine()){
             System.out.print("\033[H\033[2J");
             System.exit(0);
+        }
+    }
+
+    public static void play(String audioFilePath) {
+        try {
+            File audioFile = new File(audioFilePath);
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+            AudioFormat format = audioStream.getFormat();
+            DataLine.Info info = new DataLine.Info(Clip.class, format);
+            Clip audioClip = (Clip) AudioSystem.getLine(info);
+            audioClip.open(audioStream);
+            audioClip.start();
+            audioClip.addLineListener(event -> {
+                if (event.getType() == LineEvent.Type.STOP) {
+                    audioClip.close();
+                }
+            });
+
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            System.err.println("Error playing sound: " + e.getMessage());
         }
     }
 }
